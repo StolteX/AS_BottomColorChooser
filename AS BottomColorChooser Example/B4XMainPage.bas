@@ -48,22 +48,17 @@ Private Sub OpenSheet(DarkMode As Boolean)
 	lst_Colors.Add(BottomColorChooser.CreateColorItem(xui.Color_ARGB(255, 141, 68, 173),False))
 	lst_Colors.Add(xui.Color_Magenta)
 	lst_Colors.Add(xui.Color_Cyan)
+	
 	BottomColorChooser.SelectedColor = xui.Color_ARGB(255, 9, 131, 254)
 	
 	BottomColorChooser.Theme = IIf(DarkMode,BottomColorChooser.Theme_Dark,BottomColorChooser.Theme_Light)
 	BottomColorChooser.ActionButtonVisible = True
 	BottomColorChooser.SetItems(lst_Colors)
-	BottomColorChooser.WidthHeight = 60dip
-	BottomColorChooser.CornerRadius = 60dip/2
+'	BottomColorChooser.WidthHeight = 100dip
+'	BottomColorChooser.CornerRadius = BottomColorChooser.WidthHeight/2 'For a circle
 	BottomColorChooser.ShowPicker
 	
-	BottomColorChooser.ActionButton.Text = "Abort"
-	
-	Wait For BottomColorChooser_ItemClicked(Item As AS_BottomColorChooser_Item)
-	
-	BottomColorChooser.HidePicker
-	
-	LogColor("ItemClicked",Item.Color)
+	BottomColorChooser.ActionButton.Text = "Confirm"
 	
 End Sub
 
@@ -75,10 +70,19 @@ Private Sub OpenLight
 	OpenSheet(False)
 End Sub
 
-#Region BottomDatePickerEvents
+#Region Bottom Events
+
+Private Sub BottomColorChooser_ItemClicked(Item As AS_BottomColorChooser_Item)
+	LogColor("ItemClicked",Item.Color)
+End Sub
+
+Private Sub BottomColorChooser_DisabledItemClicked(Item As AS_BottomColorChooser_Item)
+	LogColor("DisabledItemClicked",Item.Color)
+End Sub
 
 Private Sub BottomColorChooser_ActionButtonClicked
-	Log("ActionButtonClicked")
+	LogColor("ActionButtonClicked with color",BottomColorChooser.SelectedColor)
+	BottomColorChooser.HidePicker
 End Sub
 
 #End Region
@@ -87,21 +91,21 @@ End Sub
 #Region ButtonEvents
 
 #If B4J
-Private Sub xlbl_OpenDarkPicker_MouseClicked (EventData As MouseEvent)
+Private Sub xlbl_OpenDark_MouseClicked (EventData As MouseEvent)
 	OpenDark
 End Sub
 #Else
-Private Sub xlbl_OpenDarkPicker_Click
+Private Sub xlbl_OpenDark_Click
 	OpenDark
 End Sub
 #End If
 
 #If B4J
-Private Sub xlbl_OpenLightPicker_MouseClicked (EventData As MouseEvent)
+Private Sub xlbl_OpenLight_MouseClicked (EventData As MouseEvent)
 	OpenLight
 End Sub
 #Else
-Private Sub xlbl_OpenLightPicker_Click
+Private Sub xlbl_OpenLight_Click
 	OpenLight
 End Sub
 #End If

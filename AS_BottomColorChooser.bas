@@ -37,8 +37,8 @@ Sub Class_Globals
 	Private m_ActionButtonVisible As Boolean
 	Private m_DragIndicatorColor As Int
 	Private m_SheetWidth As Float = 0
-	Private m_WidthHeight As Float = 50dip
-	Private m_CornerRadius As Float = 25dip
+	Private m_WidthHeight As Float = 60dip
+	Private m_CornerRadius As Float = 30dip
 	Private m_ActionButtonBackgroundColor As Int
 	Private m_ActionButtonTextColor As Int
 	Private m_SelectedColor As Int
@@ -284,6 +284,7 @@ Public Sub getCornerRadius As Float
 	Return m_CornerRadius
 End Sub
 
+'Default: 60dip
 'If you want a circle, then dont forget to set the CornerRadius property
 Public Sub setWidthHeight(WidthHeight As Float)
 	m_WidthHeight = WidthHeight
@@ -345,6 +346,15 @@ End Sub
 #Region ViewEvents
 
 #If B4J
+Private Sub xlbl_ActionButton_MouseClicked (EventData As MouseEvent)
+#Else
+Private Sub xlbl_ActionButton_Click
+#End If
+	XUIViewsUtils.PerformHapticFeedback(Sender)
+	ActionButtonClicked
+End Sub
+
+#If B4J
 Private Sub ColorChooser_MouseClicked (EventData As MouseEvent)
 #Else
 Private Sub ColorChooser_Click
@@ -354,7 +364,7 @@ Private Sub ColorChooser_Click
 	Dim clrItem As AS_BottomColorChooser_Item = xlbl_Color.Tag
 	
 	If clrItem.Enabled Then
-	
+		m_SelectedColor = clrItem.Color
 		Dim xpnl_ColorItemsBackground As B4XView = xlbl_Color.Parent
 
 		xlbl_Color.TextColor = GetContrastColor(xlbl_Color.Color)
@@ -387,6 +397,12 @@ End Sub
 #End Region
 
 #Region Events
+
+Private Sub ActionButtonClicked
+	If xui.SubExists(mCallBack, mEventName & "_ActionButtonClicked",0) Then
+		CallSub(mCallBack, mEventName & "_ActionButtonClicked")
+	End If
+End Sub
 
 Private Sub BottomCard_Close
 	If xui.SubExists(mCallBack, mEventName & "_Close",0) Then
